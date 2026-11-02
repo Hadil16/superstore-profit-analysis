@@ -1,0 +1,8 @@
+# Raw data: download it yourself (link in README)
+data/
+
+# Private drafts
+reports/linkedin_post.md
+
+__pycache__/
+*.pyc

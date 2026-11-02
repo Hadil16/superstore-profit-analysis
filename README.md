@@ -1,9 +1,9 @@
 # Superstore Profit Analysis: Where Does the Company Lose Money?
 
 **A retailer sold $2.3M over four years, but where does the profit leak?**
-An analysis of 9,994 order lines (2014-2017) with SQL, Python (regression) and an Excel / Google Sheets dashboard. The main finding: **discounts above 20% lose money, and they do not sell more units**.
+An analysis of 9,994 order lines (2014-2017) with SQL, Python (regression), Power BI and an Excel / Google Sheets workbook. The main finding: **discounts above 20% lose money, and they do not sell more units**.
 
-![Dashboard](reports/figures/dashboard_google_sheets.png)
+![Power BI dashboard, Discounts page](reports/figures/powerbi_page2.png)
 
 ## Key findings
 
@@ -33,6 +33,16 @@ The SQL step shows an association. Five sharper questions were answered in [`src
 
 ![Break-even discount by sub-category](reports/figures/09_breakeven_discount.png)
 
+## Power BI dashboard
+
+Three pages with a navigation menu, a "Clear filters" button and year / region filters: **Overview**, **Discounts** (shown at the top) and **Products & Regions**. The numbers match the SQL results (sales $2.30M, profit $286K, 12.5% margin, 18.7% of lines losing money, -$135K on lines above 20% discount).
+
+![Power BI dashboard, Overview page](reports/figures/powerbi_page1.png)
+
+![Power BI dashboard, Products and Regions page](reports/figures/powerbi_page3.png)
+
+The same analysis is also available as an Excel / Google Sheets workbook with `SUMIFS` formulas and 4 charts ([`excel/`](excel/)).
+
 ## Recommendations
 
 1. **Cap discounts at 20% company-wide and require manager approval above it**, and use a **lower cap (about 10%) on Tables, Bookcases, Storage and Chairs**, whose break-even discount is only 20% to 25%. Discounts do not increase units per line, so they cost margin without a visible volume benefit.
@@ -57,6 +67,7 @@ The SQL step shows an association. Five sharper questions were answered in [`src
 | Data audit | 9,994 rows, 21 columns, **0 missing values**, 0 duplicate IDs. Two traps found and fixed: the file is **not UTF-8** (read as latin-1) and dates are in **US format** (month/day/year). | [`load_data.py`](load_data.py) |
 | SQL analysis | `GROUP BY`, `CASE WHEN` discount buckets, `HAVING`, margin calculation | [`sql/analysis.sql`](sql/analysis.sql) |
 | Python analysis | Regression with robust standard errors, volume check, break-even discounts, region gap, product drill-down | [`src/discount_analysis.py`](src/discount_analysis.py) |
+| Power BI | Model with a calendar and the break-even table, 15 DAX measures, 3 report pages | [`powerbi/`](powerbi/) |
 | Excel / Google Sheets | 3 sheets: data, `SUMIFS` summary, dashboard with 4 charts | [`excel/`](excel/) |
 | Cross-check | All 31 summary rows were checked against the SQL results: no difference | [`excel/build_workbook.py`](excel/build_workbook.py) |
 | Insights | Findings, recommendations and limitations | this README, [`reports/executive_summary.md`](reports/executive_summary.md) |
@@ -74,7 +85,10 @@ When the first spreadsheet import was done in a French-locale Google Sheet, the 
 python load_data.py              # CSV -> data/superstore.db (SQLite)
 python src/discount_analysis.py  # regression, break-even discounts, charts, tables
 python excel/build_workbook.py   # regenerates the Excel workbook
+python powerbi/build_pbip.py     # generates the Power BI project (optional)
 ```
+
+To open the Power BI dashboard: run `python powerbi/build_pbip.py`, open `powerbi/superstore_dashboard.pbip` in Power BI Desktop, then click **Refresh now** (wait for each load to finish before clicking again). The parameters `DataFolder` and `TablesFolder` point to the `data/` and `reports/tables/` folders; change them under Transform data > Edit parameters if you move the project.
 
 Then run the queries of `sql/analysis.sql` in any SQLite tool (for example DB Browser for SQLite) against `data/superstore.db`.
 
@@ -85,11 +99,12 @@ Then run the queries of `sql/analysis.sql` in any SQLite tool (for example DB Br
 ├── load_data.py          CSV -> SQLite (handles encoding and date format)
 ├── sql/analysis.sql      the business questions in SQL
 ├── src/                  Python analysis (regression, break-even discounts)
+├── powerbi/              build script that generates the Power BI project
 ├── excel/                Excel workbook (data, formulas, dashboard) and its build script
 ├── reports/              executive summary, charts, result tables
 └── requirements.txt
 ```
 
-**Tools:** SQL (SQLite), Python (pandas, statsmodels, matplotlib), Excel / Google Sheets (SUMIFS, charts).
+**Tools:** SQL (SQLite), Python (pandas, statsmodels, matplotlib), Power BI (Power Query, DAX), Excel / Google Sheets (SUMIFS, charts).
 
 **Author:** Hadil Ziane, MSc Statistics & Economic Foresight (ENSSEA).

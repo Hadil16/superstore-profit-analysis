@@ -4,5 +4,13 @@ data/
 # Private drafts
 reports/linkedin_post.md
 
+# Power BI local cache and the generated project (it contains a local file path).
+# Regenerate it with: python powerbi/build_pbip.py
+.pbi/
+*.pbix.bak
+powerbi/superstore_dashboard.pbip
+powerbi/superstore_dashboard.Report/
+powerbi/superstore_dashboard.SemanticModel/
+
 __pycache__/
 *.pyc

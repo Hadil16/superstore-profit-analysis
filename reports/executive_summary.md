@@ -13,14 +13,17 @@ The company is profitable overall, but **discounts above 20% destroy profit**. T
 3. **Central is the weak region** (7.9% margin) and gives the largest discounts (24% on average, against 10.9% in the West).
 4. **Three sub-categories lose money:** Tables (-$17.7K), Bookcases (-$3.5K) and Supplies (-$1.2K).
 5. **Customer segments are similar** (11.5% to 14.0% margin), so segments are not the problem.
+6. **Discounts do not buy volume.** Units per order line are the same with or without discount (about 3.8), so the lost margin brings no visible extra sales.
+7. **A statistical model confirms the size of the effect:** each extra 10 points of discount lowers the margin by about 20 points, with products, regions and segments held constant.
+8. **Some products cannot afford any large discount.** Tables and Bookcases break even at a 20% discount, Storage at 24% and Chairs at 25%.
 
 ## What we recommend
 
 | Priority | Action | How we will know it works |
 |---|---|---|
-| 1 | Cap discounts at 20%, with manager approval above | Share of lines above 20% discount, overall margin |
+| 1 | Cap discounts at 20%, with manager approval above (about 10% for Tables, Bookcases, Storage and Chairs) | Share of lines above the cap, overall margin |
 | 2 | Review Tables pricing and discount policy | Tables margin moves above 0% |
-| 3 | Investigate Supplies costs and prices (its losses are not discount-driven) | Supplies margin |
+| 3 | Reprice the Supplies electric letter openers (their cost is about 97% of the full price) | Supplies margin |
 | 4 | Align Central discount rules with the West | Central margin and average discount |
 
 ## Caveats

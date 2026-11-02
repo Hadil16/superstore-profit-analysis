@@ -1,0 +1,36 @@
+{
+  "q1_effect_of_10_points_discount_on_margin": -0.19995957915854656,
+  "q1_ci_10_points": [
+    -0.20417650233510296,
+    -0.19574265598199023
+  ],
+  "q1_r_squared": 0.8166662921476593,
+  "q2_units_per_line": {
+    "no discount": 3.807211338057524,
+    "1-20%": 3.7420457533526164,
+    "21-40%": 3.782608695652174,
+    "over 40%": 3.8960342979635585
+  },
+  "q2_log_quantity_coef": -0.0022833315541385866,
+  "q2_p_value": 0.9446309378296555,
+  "q3_lowest_breakeven": {
+    "Bookcases": 0.19999999999999996,
+    "Tables": 0.20000000000000007,
+    "Storage": 0.24,
+    "Chairs": 0.25
+  },
+  "q3_n_below_cap": 4,
+  "q4_gap_reduction": {
+    "East": 0.7066401447300286,
+    "South": 0.7001450561721256,
+    "West": 0.8117305278755289
+  },
+  "q5_supplies_products_total": 36,
+  "q5_supplies_products_losing": 11,
+  "q5_worst_cost_ratio": 0.9750000000000001,
+  "q5_worst_two_share_of_losses": 0.8230503559641553,
+  "q5_worst_two": [
+    "Martin Yale Chadless Opener Electric Letter Opener",
+    "Premier Automatic Letter Opener"
+  ]
+}

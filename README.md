@@ -35,11 +35,13 @@ The SQL step shows an association. Five sharper questions were answered in [`src
 
 ## Power BI dashboard
 
-Three pages with a navigation menu, a "Clear filters" button and year / region filters: **Overview**, **Discounts** (shown at the top) and **Products & Regions**. The numbers match the SQL results (sales $2.30M, profit $286K, 12.5% margin, 18.7% of lines losing money, -$135K on lines above 20% discount).
+Four pages with a navigation menu, a "Clear filters" button and year / region filters: **Overview**, **Discounts** (shown at the top), **Products & Regions** and **About** (the company, the data in numbers, definitions, method and limits). Superstore is a fictional company from Tableau's sample data, so it has no brand colors: the identity is a design choice (slate header, blue for data, orange accent, red only for losses). The numbers match the SQL results (sales $2.30M, profit $286K, 12.5% margin, 18.7% of lines losing money, -$135K on lines above 20% discount).
 
 ![Power BI dashboard, Overview page](reports/figures/powerbi_page1.png)
 
 ![Power BI dashboard, Products and Regions page](reports/figures/powerbi_page3.png)
+
+![Power BI dashboard, About page](reports/figures/powerbi_page4.png)
 
 The same analysis is also available as an Excel / Google Sheets workbook with `SUMIFS` formulas and 4 charts ([`excel/`](excel/)).
 
@@ -67,7 +69,7 @@ The same analysis is also available as an Excel / Google Sheets workbook with `S
 | Data audit | 9,994 rows, 21 columns, **0 missing values**, 0 duplicate IDs. Two traps found and fixed: the file is **not UTF-8** (read as latin-1) and dates are in **US format** (month/day/year). | [`load_data.py`](load_data.py) |
 | SQL analysis | `GROUP BY`, `CASE WHEN` discount buckets, `HAVING`, margin calculation | [`sql/analysis.sql`](sql/analysis.sql) |
 | Python analysis | Regression with robust standard errors, volume check, break-even discounts, region gap, product drill-down | [`src/discount_analysis.py`](src/discount_analysis.py) |
-| Power BI | Model with a calendar and the break-even table, 15 DAX measures, 3 report pages | [`powerbi/`](powerbi/) |
+| Power BI | Model with a calendar and the break-even table, 15 DAX measures, 4 report pages | [`powerbi/`](powerbi/) |
 | Excel / Google Sheets | 3 sheets: data, `SUMIFS` summary, dashboard with 4 charts | [`excel/`](excel/) |
 | Cross-check | All 31 summary rows were checked against the SQL results: no difference | [`excel/build_workbook.py`](excel/build_workbook.py) |
 | Insights | Findings, recommendations and limitations | this README, [`reports/executive_summary.md`](reports/executive_summary.md) |

@@ -24,7 +24,10 @@ DATA_DIR = str(ROOT / "data")
 TABLES_DIR = str(ROOT / "reports" / "tables")
 
 T = "\t"
-NAVY, TEAL, RED, AMBER, GREY = "#1B3A6B", "#2A9D8F", "#C0392B", "#F2A900", "#9AA5B1"
+# Superstore is a fictional company (Tableau sample data), so it has no brand colors.
+# The identity is a design choice: deep slate header, blue as the main data color,
+# orange as the accent, and red reserved for losses.
+NAVY, TEAL, RED, AMBER, GREY = "#1F2A44", "#4E79A7", "#C0392B", "#F28E2B", "#9AA5B1"
 
 
 def w(path, text):
@@ -322,7 +325,7 @@ def table(name, x, y, w_, h, cols, ttl, sort=None):
 def nav(name):
     selected = {"properties": {"fillColor": solid(AMBER)}, "selector": {"id": "selected"}}
     selected_text = {"properties": {"fontColor": solid(NAVY)}, "selector": {"id": "selected"}}
-    return visual(name, 500, 8, 400, 44, "pageNavigator", objects={"fill": [selected], "text": [selected_text]})
+    return visual(name, 500, 8, 450, 44, "pageNavigator", objects={"fill": [selected], "text": [selected_text]})
 
 
 def band(name):
@@ -337,19 +340,36 @@ def clear_button(name):
                                      "fontColor": solid("#FFFFFF")}, "selector": {"id": "default"}}],
             "icon": [{"properties": {"shapeType": lit("'blank'")}, "selector": {"id": "default"}}]}
     link = {"visualLink": [{"properties": {"show": lit("true"), "type": lit("'ClearAllSlicers'")}}]}
-    return visual(name, 910, 8, 140, 44, "actionButton", objects=objs, container=link)
+    return visual(name, 958, 8, 110, 44, "actionButton", objects=objs, container=link)
 
 
 def title_box(name, text):
-    return textbox(name, 20, 8, 470, 44, [(text, True, 20, "#FFFFFF")])
+    return textbox(name, 20, 0, 470, 46, [(text, True, 18, "#FFFFFF")])
+
+
+def subtitle_box(name):
+    return textbox(name, 20, 38, 470, 26,
+                   [("US retail chain (sample data)  |  Orders 2014-2017  |  4 US regions",
+                     False, 9, "#C9D3E6")])
+
+
+def accent_stripe(name):
+    objs = {"shape": [{"properties": {"tileShape": lit("'rectangle'")}}],
+            "fill": [{"properties": {"fillColor": solid(AMBER)}, "selector": {"id": "default"}}],
+            "outline": [{"properties": {"show": lit("false")}}]}
+    return visual(name, 0, 64, 1280, 4, "shape", objs, z=1)
 
 
 def cards(names_and_specs):
     return [card(n, 20 + i * 172, m, lab, **kw) for i, (n, m, lab, kw) in enumerate(names_and_specs)]
 
 
-TOP = lambda t, n: [title_box(f"title{n}", t), nav(f"nav{n}"), clear_button(f"clear{n}"),
-                    slicer(f"slicer_year{n}", 1060, 8, 200, 50, "Calendar", "Year", "Year")]
+def TOP(t, n, year_slicer=True):
+    items = [title_box(f"title{n}", t), subtitle_box(f"subtitle{n}"), accent_stripe(f"stripe{n}"),
+             nav(f"nav{n}"), clear_button(f"clear{n}")]
+    if year_slicer:
+        items.append(slicer(f"slicer_year{n}", 1075, 8, 185, 50, "Calendar", "Year", "Year"))
+    return items
 
 # ---------------- page 1: overview
 page1 = TOP("Superstore: where is profit lost?", 1) + cards([
@@ -417,13 +437,48 @@ page3 = TOP("Products and regions", 3) + [
           "Biggest losses by order line (react to the filters)", sort=("orders", "profit", "Column", "Ascending")),
 ]
 
+# ---------------- page 4: about the company and the data
+def info_box(name, x, y, w_, h, heading, lines):
+    paras = [(heading, True, 17)]
+    for t in lines:
+        paras += [(" ", False, 4), (t, False, 12)]  # a small blank line between items
+    return textbox(name, x, y, w_, h, paras)
+
+
+page4 = TOP("About the company and the data", 4, year_slicer=False) + [
+    info_box("about_company", 20, 82, 620, 290, "The company", [
+        "Superstore is a fictional US retail chain, taken from Tableau's public sample data. It is not a real company, so it has no brand colors: the colors of this report are a design choice.",
+        "It sells furniture, office supplies and technology to consumers, corporate clients and home offices.",
+        "Four US regions: Central, East, South and West. Orders from January 2014 to December 2017.",
+    ]),
+    info_box("about_data", 660, 82, 600, 290, "The data in numbers", [
+        "9,994 order lines in 5,009 orders (2 lines per order on average)",
+        "793 customers, 1,862 products, 17 sub-categories, 49 states",
+        "Average order value: $459",
+        "Sales $2.30M, profit $286K, margin 12.5%",
+        "From 2014 to 2017: sales +51%, profit +89%",
+    ]),
+    info_box("about_defs", 20, 388, 620, 322, "Definitions", [
+        "Profit margin = profit / sales.",
+        "Order line = one product in one order (the unit of analysis).",
+        "Loss-making line = an order line with a negative profit.",
+        "Break-even discount = the discount at which a sub-category's margin reaches zero. It is estimated from the median cost as a share of the full price, with cost = sales - profit.",
+    ]),
+    info_box("about_method", 660, 388, 600, 322, "Method and limits", [
+        "SQL answers the business questions, Python measures the discount effect (regression), Power BI shows the results, and an Excel / Google Sheets workbook gives a second check.",
+        "Association is not causation: discounts are the strongest suspect for the losses, not a proven cause.",
+        "Sample data: the results illustrate a method, not a real company. Profit has no cost detail.",
+        "Source: Tableau Superstore sample data (Kaggle copy).",
+    ]),
+]
+
 # the top band on pages 1 and 2 starts at y=0 with the title; page 3 charts start below the band
-BORDER = {"border": [{"properties": {"show": lit("true"), "color": lit("'#D6DEE6'"), "radius": lit("10D")}}],
+BORDER ={"border": [{"properties": {"show": lit("true"), "color": lit("'#D6DEE6'"), "radius": lit("10D")}}],
           "background": [{"properties": {"show": lit("true"), "color": solid("#FFFFFF"), "transparency": lit("0D")}}]}
-for pg, band_name in ((page1, "band1"), (page2, "band2"), (page3, "band3")):
+for pg, band_name in ((page1, "band1"), (page2, "band2"), (page3, "band3"), (page4, "band4")):
     pg.insert(0, band(band_name))
     for v in pg:
-        if v["name"].startswith("title"):
+        if v["name"].startswith(("title", "subtitle")):
             v["visual"].setdefault("visualContainerObjects", {})["background"] = [{"properties": {"show": lit("false")}}]
         elif v["visual"]["visualType"] not in ("pageNavigator", "actionButton", "shape"):
             v["visual"].setdefault("visualContainerObjects", {}).update(BORDER)
@@ -454,10 +509,10 @@ wj(RP / "definition" / "report.json", {
                  "defaultDrillFilterOtherVisuals": True, "allowChangeFilterTypes": True,
                  "useEnhancedTooltips": True, "useDefaultAggregateDisplayName": True}})
 wj(RP / "definition" / "pages" / "pages.json", {"$schema": f"{SCHEMA}/pagesMetadata/1.0.0/schema.json",
-                                                "pageOrder": ["page_overview", "page_discounts", "page_products"],
+                                                "pageOrder": ["page_overview", "page_discounts", "page_products", "page_about"],
                                                 "activePageName": "page_overview"})
 for pname, disp, visuals in (("page_overview", "Overview", page1), ("page_discounts", "Discounts", page2),
-                             ("page_products", "Products & Regions", page3)):
+                             ("page_products", "Products & Regions", page3), ("page_about", "About", page4)):
     wj(RP / "definition" / "pages" / pname / "page.json",
        {"$schema": f"{SCHEMA}/page/2.0.0/schema.json", "name": pname, "displayName": disp,
         "displayOption": "FitToPage", "height": 720, "width": 1280,

@@ -357,7 +357,7 @@ def accent_stripe(name):
     objs = {"shape": [{"properties": {"tileShape": lit("'rectangle'")}}],
             "fill": [{"properties": {"fillColor": solid(AMBER)}, "selector": {"id": "default"}}],
             "outline": [{"properties": {"show": lit("false")}}]}
-    return visual(name, 0, 64, 1280, 4, "shape", objs, z=1)
+    return visual(name, 0, 64, 1280, 4, "shape", objects=objs, z=1)
 
 
 def cards(names_and_specs):
